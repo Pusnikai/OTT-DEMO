@@ -11,25 +11,22 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Updated to the latest version
+        uses: actions/checkout@v4
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3  # Updated to the latest version
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ secrets.AWS_REGION }}
-
-
-      - name: Install Dependencies
-        run: sudo apt update && sudo apt install -y awscli
 
       - name: Deploy Application to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i "keys/OTTFreeKey-Ubuntu.pem" ubuntu@54.175.245.141 << EOF
+          ssh -o StrictHostKeyChecking=no -i "keys/OTTFreeKey-Ubuntu.pem" ubuntu@<YOUR_EC2_PUBLIC_IP> << EOF
           sudo apt update -y
           sudo apt install -y apache2
           sudo systemctl start apache2
           sudo systemctl enable apache2
-          echo "<h1>Welcome to Ontario Tech Trips!</h1>" | sudo tee /var/www/html/index.html
+          echo "<h1>Welcome to Ontario Tech Trips (Ubuntu Free Tier)!</h1>" | sudo tee /var/www/html/index.html
           EOF
